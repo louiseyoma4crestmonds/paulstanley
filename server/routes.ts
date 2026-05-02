@@ -52,7 +52,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         verificationCode,
       });
       
-      await sendVerificationEmail(email, fullName, verificationCode);
+      // Send email non-blocking — registration succeeds even if email fails
+      sendVerificationEmail(email, fullName, verificationCode).catch(err => {
+        console.error(`Email send failed for ${email}:`, err.message);
+        console.log(`[FALLBACK] Verification code for ${email}: ${verificationCode}`);
+      });
       
       res.json({ 
         message: "Registration successful. Please check your email for verification code.",
@@ -107,7 +111,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const verificationCode = crypto.randomInt(100000, 999999).toString();
       await storage.updateUser(user.id, { verificationCode });
       
-      await sendVerificationEmail(user.email, user.fullName, verificationCode);
+      // Send email non-blocking — resend succeeds even if email fails
+      sendVerificationEmail(user.email, user.fullName, verificationCode).catch(err => {
+        console.error(`Email resend failed for ${user.email}:`, err.message);
+        console.log(`[FALLBACK] New verification code for ${user.email}: ${verificationCode}`);
+      });
       
       res.json({ message: "Verification code resent" });
     } catch (error: any) {
