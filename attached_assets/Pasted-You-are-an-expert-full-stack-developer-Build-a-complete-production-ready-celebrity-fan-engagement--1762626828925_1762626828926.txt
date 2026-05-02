@@ -1,0 +1,190 @@
+You are an expert full-stack developer. Build a complete, production-ready celebrity fan engagement platform according to the following specifications. Use **Next.js 14+ (App Router)** for the frontend and **Django 5+ (with Django REST Framework)** for the backend. All code must be clean, type-safe, well-documented, and follow modern best practices.
+
+---
+
+### PROJECT NAME
+CelebConnect
+
+---
+
+### CORE REQUIREMENTS
+
+#### Authentication & Authorization
+1. **User Registration**  
+   - Registration form with: full name, email, password, confirm password.  
+   - On submit, send **6-digit 2FA verification code** to user’s email.  
+   - User must enter code to complete registration.  
+   - Store password securely using Django’s `PBKDF2` with high iterations.
+
+2. **Email + Password Login**  
+   - Secure login with email/password.  
+   - Issue **JWT access + refresh tokens** (httpOnly cookies).  
+   - Protected dashboard routes via middleware.
+
+3. **Password Reset Flow**  
+   - "Forgot Password?" → enter email → if exists, send reset link (valid 15 mins).  
+   - Reset page to set new password.
+
+---
+
+#### Open (Public) Pages
+1. **Landing Page**  
+   - Hero section with celebrity bio, mission, and platform intro.  
+   - Featured sections: Events, Causes, Products, Meet & Greet.  
+   - Call-to-action buttons (Register, Login, Contact).
+
+2. **Contact Us Form**  
+   - Fields: name, email, subject, message.  
+   - On submit → send email to `support@celebconnect.com` via **Celery + SMTP**.
+
+3. **Payment Methods Page**  
+   - Static info page listing:  
+     - Bitcoin (BTC)  
+     - Ethereum (ETH)  
+     - Litecoin (LTC)  
+     - PayPal  
+   - Include wallet addresses, QR codes, and PayPal button integration.
+
+4. **Causes & Donations Page**  
+   - List all causes (title, description, goal, current amount, image).  
+   - "Donate Now" button → redirects to donation flow (after login).  
+   - Admin can add/edit causes via Django Admin.
+
+5. **Meet & Greet Info Page**  
+   - Explain in-person and virtual meet options.  
+   - Requirements: promo code, donation, product purchase, logistics fee.
+
+6. **Upcoming Events Page**  
+   - Grid/list of events: title, date, location, ticket link (external or internal).  
+   - Countdown timer for upcoming events.
+
+7. **Custom Products Store**  
+   - Product cards: image, name, price, description, "Add to Cart".  
+   - Cart system (localStorage → sync on login).  
+   - Checkout with shipping address + payment (crypto/PayPal).
+
+---
+
+#### User Dashboard (Protected)
+1. **Profile Management**  
+   - View/edit: name, email, phone, shipping address, profile picture.  
+   - Upload avatar (stored in S3 or local with fallback).
+
+2. **Meet & Greet Request**  
+   - Form: preferred date, location (or virtual), message.  
+   - Only allowed if **all 4 requirements** are met (see below).
+
+3. **Live Call Request**  
+   - Form: preferred time, platform (Zoom/Google Meet), message.  
+   - Same 4 requirements.
+
+4. **Engagement Requirements (4 Tasks to Unlock Meet/Call)**  
+   a. **Acquire Promo Code or Fan Card**  
+      - Input field to enter promo code → validate via API.  
+      - Or purchase "Fan Card" (digital collectible, $50 via PayPal/crypto).  
+   b. **Donate to a Cause**  
+      - Select cause → enter amount → pay via crypto/PayPal.  
+      - Record donation in user history.  
+   c. **Buy a Product**  
+      - Complete checkout from store.  
+   d. **Pay Logistics Fee**  
+      - Fixed fee ($200) → pay via crypto/PayPal.  
+
+   → Each completed task = **25% progress**.
+
+5. **Progress Bar**  
+   - Circular or linear progress bar in dashboard.  
+   - Shows % complete (0%, 25%, 50%, 75%, 100%).  
+   - Unlock "Request Meet" or "Request Call" only at 100%.
+
+6. **Spending History Page**  
+   - Table: Date, Item, Amount (USD + crypto), Status.  
+   - Filter by type (Donation, Product, Fee, Fan Card).  
+   - Export as CSV.
+
+---
+
+### TECH STACK & CONSTRAINTS
+
+**Frontend (Next.js):**
+- Next.js 14+ with App Router.
+- TypeScript.
+- Tailwind CSS + shadcn/ui components.
+- React Hook Form + Zod for validation.
+- TanStack Query for data fetching.
+- Zustand or Context for global state (cart, progress).
+- JWT in httpOnly cookies.
+- Server Actions for mutations (where possible).
+- Route protection with middleware.
+- Dark mode toggle.
+- Responsive (mobile-first).
+- ESLint + Prettier + Husky.
+
+**Backend (Django):**
+- Django 5+, Python 3.12+.
+- Django REST Framework.
+- PostgreSQL.
+- `djangorestframework-simplejwt` for JWT.
+- CORS allowed for Next.js origin.
+- **Celery + Redis** for:
+  - Sending 2FA, password reset, contact emails.
+  - Processing crypto payment webhooks.
+- **Django Channels + Redis** for real-time progress updates (optional).
+- **django-allauth** (optional) or custom email verification.
+- **drf-spectacular** for OpenAPI/Swagger docs.
+- File uploads → **AWS S3** (or local fallback).
+- Crypto payments:
+  - Generate unique wallet addresses per transaction.
+  - Webhook listener for confirmations (BTC, ETH, LTC).
+- PayPal SDK integration (server-side).
+
+**DevOps:**
+- `docker-compose.yml` with:
+  - `web` (Django + Gunicorn)
+  - `next` (Next.js)
+  - `postgres`
+  - `redis`
+  - `celery`
+  - `celery-beat`
+  - `nginx` (reverse proxy)
+- Production Dockerfiles.
+- GitHub Actions CI/CD.
+- `.env.example` for both frontend and backend.
+
+---
+
+### DATABASE MODELS (Django)
+```python
+User (extended with profile fields)
+Cause (title, desc, goal, raised, image)
+Product (name, price_usd, image, stock, desc)
+Donation (user, cause, amount_usd, crypto_type, tx_hash, status)
+Purchase (user, product, quantity, total_usd, tx_hash, status)
+FanCardPurchase (user, tx_hash, status)
+LogisticsPayment (user, amount_usd, tx_hash, status)
+MeetGreetRequest (user, type, date, location, message, status)
+PromoCode (code, used_by_user, is_valid)
+ContactMessage (name, email, subject, message, sent_at)
+Event (title, date, location, ticket_url, image)
+
+API ENDPOINTS (Examples)
+textPOST   /api/auth/register/
+POST   /api/auth/verify-2fa/
+POST   /api/auth/login/
+POST   /api/auth/password-reset/
+POST   /api/auth/password-reset-confirm/
+
+GET    /api/causes/
+POST   /api/donations/
+GET    /api/products/
+POST   /api/cart/add/
+POST   /api/checkout/crypto/
+POST   /api/checkout/paypal/
+
+GET    /api/user/profile/
+PATCH  /api/user/profile/
+GET    /api/user/progress/
+GET    /api/user/spending/
+
+POST   /api/meet-request/
+POST   /api/contact/
