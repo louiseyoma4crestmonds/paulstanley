@@ -12,6 +12,7 @@ import {
 } from "@shared/schema";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { sendVerificationEmail } from "./email";
 
 function requireAuth(req: Request, res: Response, next: Function) {
   if (!req.isAuthenticated()) {
@@ -51,7 +52,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         verificationCode,
       });
       
-      console.log(`Verification code for ${email}: ${verificationCode}`);
+      await sendVerificationEmail(email, fullName, verificationCode);
       
       res.json({ 
         message: "Registration successful. Please check your email for verification code.",
@@ -106,7 +107,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const verificationCode = crypto.randomInt(100000, 999999).toString();
       await storage.updateUser(user.id, { verificationCode });
       
-      console.log(`New verification code for ${user.email}: ${verificationCode}`);
+      await sendVerificationEmail(user.email, user.fullName, verificationCode);
       
       res.json({ message: "Verification code resent" });
     } catch (error: any) {
