@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { User, Video, Receipt, CheckCircle2, Lock, Loader2 } from "lucide-react";
+import { User, Video, Receipt, CheckCircle2, Lock, Loader2, MailWarning } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -42,9 +42,10 @@ interface Transaction {
 }
 
 interface UserData {
-  id: number;
+  id: string;
   fullName: string;
   email: string;
+  emailVerified: boolean;
   isAdmin: boolean;
 }
 
@@ -132,10 +133,11 @@ export default function Dashboard() {
     liveCallMutation.mutate(callFormData);
   };
 
-  if (!user && !userLoading) {
-    setLocation("/login");
-    return null;
-  }
+  useEffect(() => {
+    if (!user && !userLoading) {
+      setLocation("/login");
+    }
+  }, [user, userLoading]);
 
   if (userLoading || progressLoading) {
     return (
@@ -168,6 +170,21 @@ export default function Dashboard() {
             <h1 className="text-4xl font-bold mb-2">Dashboard</h1>
             <p className="text-muted-foreground">Welcome back, {user?.fullName}</p>
           </div>
+
+          {!user?.emailVerified && (
+            <button
+              onClick={() => setLocation("/verify-email")}
+              data-testid="banner-email-unverified"
+              className="w-full mb-6 flex items-center gap-3 px-4 py-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 transition-colors text-left"
+            >
+              <MailWarning className="h-5 w-5 shrink-0" />
+              <div>
+                <p className="font-medium text-sm">Your email address is not verified</p>
+                <p className="text-xs opacity-80">Click here to verify your email and unlock all features</p>
+              </div>
+              <span className="ml-auto text-xs font-medium underline underline-offset-2 shrink-0">Verify now →</span>
+            </button>
+          )}
 
           <Tabs defaultValue="overview" className="space-y-6">
             <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 gap-2">

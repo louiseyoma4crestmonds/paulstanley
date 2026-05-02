@@ -54,10 +54,6 @@ export function setupAuth(app: Express) {
             return done(null, false, { message: "Invalid email or password" });
           }
 
-          if (!user.emailVerified) {
-            return done(null, false, { message: "Please verify your email first" });
-          }
-
           const isValidPassword = await bcrypt.compare(password, user.password);
           if (!isValidPassword) {
             return done(null, false, { message: "Invalid email or password" });

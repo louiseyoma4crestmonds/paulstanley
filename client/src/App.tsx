@@ -15,6 +15,7 @@ import Events from "@/pages/Events";
 import Products from "@/pages/Products";
 import MeetGreet from "@/pages/MeetGreet";
 import Admin from "@/pages/Admin";
+import VerifyEmail from "@/pages/VerifyEmail";
 
 function Router() {
   return (
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/register" component={Register} />
       <Route path="/login" component={Login} />
+      <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/admin" component={Admin} />
       <Route path="/contact" component={Contact} />
