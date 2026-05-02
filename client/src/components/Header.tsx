@@ -1,12 +1,33 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "./ThemeToggle";
-import { ShoppingCart, Menu, X } from "lucide-react";
+import { ShoppingCart, Menu, X, LogOut, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+
+interface UserData {
+  id: number;
+  fullName: string;
+  email: string;
+  isAdmin: boolean;
+}
 
 export default function Header() {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const { data: user } = useQuery<UserData>({
+    queryKey: ["/api/user"],
+  });
+
+  const logoutMutation = useMutation({
+    mutationFn: () => apiRequest("POST", "/api/logout"),
+    onSuccess: () => {
+      queryClient.clear();
+      setLocation("/");
+    },
+  });
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -47,12 +68,34 @@ export default function Header() {
             </Button>
             <ThemeToggle />
             <div className="hidden md:flex gap-2">
-              <Link href="/login">
-                <Button variant="ghost" data-testid="button-login">Login</Button>
-              </Link>
-              <Link href="/register">
-                <Button data-testid="button-register">Join Now</Button>
-              </Link>
+              {user ? (
+                <>
+                  <Link href={user.isAdmin ? "/admin" : "/dashboard"}>
+                    <Button variant="ghost" data-testid="button-dashboard">
+                      <LayoutDashboard className="h-4 w-4 mr-2" />
+                      {user.isAdmin ? "Admin" : "Dashboard"}
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="outline"
+                    onClick={() => logoutMutation.mutate()}
+                    disabled={logoutMutation.isPending}
+                    data-testid="button-logout"
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Log Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button variant="ghost" data-testid="button-login">Login</Button>
+                  </Link>
+                  <Link href="/register">
+                    <Button data-testid="button-register">Join Now</Button>
+                  </Link>
+                </>
+              )}
             </div>
             <Button
               variant="ghost"
@@ -80,12 +123,33 @@ export default function Header() {
               </Link>
             ))}
             <div className="flex gap-2 pt-2">
-              <Link href="/login" className="flex-1">
-                <Button variant="ghost" className="w-full">Login</Button>
-              </Link>
-              <Link href="/register" className="flex-1">
-                <Button className="w-full">Join Now</Button>
-              </Link>
+              {user ? (
+                <>
+                  <Link href={user.isAdmin ? "/admin" : "/dashboard"} className="flex-1">
+                    <Button variant="ghost" className="w-full" onClick={() => setMobileMenuOpen(false)}>
+                      {user.isAdmin ? "Admin" : "Dashboard"}
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => { logoutMutation.mutate(); setMobileMenuOpen(false); }}
+                    disabled={logoutMutation.isPending}
+                    data-testid="button-logout-mobile"
+                  >
+                    Log Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="flex-1">
+                    <Button variant="ghost" className="w-full">Login</Button>
+                  </Link>
+                  <Link href="/register" className="flex-1">
+                    <Button className="w-full">Join Now</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         )}
