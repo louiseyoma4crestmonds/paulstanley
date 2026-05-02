@@ -22,7 +22,7 @@ export default function Header() {
   });
 
   const logoutMutation = useMutation({
-    mutationFn: () => apiRequest("POST", "/api/logout"),
+    mutationFn: () => apiRequest("/api/logout", { method: "POST" }),
     onSuccess: () => {
       queryClient.clear();
       setLocation("/");

@@ -105,7 +105,10 @@ function ProgressToggle({ userId, flag, value }: { userId: string; flag: string;
   const { toast } = useToast();
   const mutation = useMutation({
     mutationFn: (newValue: boolean) =>
-      apiRequest("PATCH", `/api/admin/users/${userId}/progress`, { flag, value: newValue }),
+      apiRequest(`/api/admin/users/${userId}/progress`, {
+        method: "PATCH",
+        body: JSON.stringify({ flag, value: newValue }),
+      }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/admin/users"] }),
     onError: (err: any) =>
       toast({ title: "Error", description: err.message || "Failed to update", variant: "destructive" }),
@@ -131,8 +134,8 @@ function CausesManager() {
   const saveMutation = useMutation({
     mutationFn: (data: typeof form) =>
       editing
-        ? apiRequest("PATCH", `/api/causes/${editing.id}`, data)
-        : apiRequest("POST", "/api/causes", data),
+        ? apiRequest(`/api/causes/${editing.id}`, { method: "PATCH", body: JSON.stringify(data) })
+        : apiRequest("/api/causes", { method: "POST", body: JSON.stringify(data) }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/causes"] });
       setDialogOpen(false);
@@ -142,7 +145,7 @@ function CausesManager() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiRequest("DELETE", `/api/causes/${id}`),
+    mutationFn: (id: string) => apiRequest(`/api/causes/${id}`, { method: "DELETE" }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/causes"] });
       toast({ title: "Cause deleted" });
@@ -269,10 +272,12 @@ function EventsManager() {
   const { data: events, isLoading } = useQuery<Event[]>({ queryKey: ["/api/events"] });
 
   const saveMutation = useMutation({
-    mutationFn: (data: typeof form) =>
-      editing
-        ? apiRequest("PATCH", `/api/events/${editing.id}`, { ...data, date: new Date(data.date).toISOString() })
-        : apiRequest("POST", "/api/events", { ...data, date: new Date(data.date).toISOString() }),
+    mutationFn: (data: typeof form) => {
+      const body = { ...data, date: new Date(data.date).toISOString() };
+      return editing
+        ? apiRequest(`/api/events/${editing.id}`, { method: "PATCH", body: JSON.stringify(body) })
+        : apiRequest("/api/events", { method: "POST", body: JSON.stringify(body) });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/events"] });
       setDialogOpen(false);
@@ -282,7 +287,7 @@ function EventsManager() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiRequest("DELETE", `/api/events/${id}`),
+    mutationFn: (id: string) => apiRequest(`/api/events/${id}`, { method: "DELETE" }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/events"] });
       toast({ title: "Event deleted" });
@@ -397,10 +402,12 @@ function ProductsManager() {
   const { data: products, isLoading } = useQuery<Product[]>({ queryKey: ["/api/products"] });
 
   const saveMutation = useMutation({
-    mutationFn: (data: typeof form) =>
-      editing
-        ? apiRequest("PATCH", `/api/products/${editing.id}`, { ...data, stock: parseInt(data.stock) })
-        : apiRequest("POST", "/api/products", { ...data, stock: parseInt(data.stock) }),
+    mutationFn: (data: typeof form) => {
+      const body = { ...data, stock: parseInt(data.stock) };
+      return editing
+        ? apiRequest(`/api/products/${editing.id}`, { method: "PATCH", body: JSON.stringify(body) })
+        : apiRequest("/api/products", { method: "POST", body: JSON.stringify(body) });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/products"] });
       setDialogOpen(false);
@@ -410,7 +417,7 @@ function ProductsManager() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiRequest("DELETE", `/api/products/${id}`),
+    mutationFn: (id: string) => apiRequest(`/api/products/${id}`, { method: "DELETE" }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/products"] });
       toast({ title: "Product deleted" });
