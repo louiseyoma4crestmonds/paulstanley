@@ -29,6 +29,7 @@ import { eq, desc, and } from "drizzle-orm";
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
+  getAllUsers(): Promise<User[]>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: string, data: Partial<User>): Promise<User | undefined>;
   
@@ -52,9 +53,11 @@ export interface IStorage {
   
   getTransactionsByUser(userId: string): Promise<Transaction[]>;
   createTransaction(transaction: InsertTransaction): Promise<Transaction>;
+  deleteAdminGrantTransaction(userId: string, type: string): Promise<boolean>;
   
   getMeetGreetRequestsByUser(userId: string): Promise<MeetGreetRequest[]>;
-  getAllMeetGreetRequests(): Promise<MeetGreetRequest[]>;
+  getAllMeetGreetRequests(): Promise<(MeetGreetRequest & { user: { fullName: string; email: string } | null })[]>;
+  getAllLiveCallRequests(): Promise<(MeetGreetRequest & { user: { fullName: string; email: string } | null })[]>;
   createMeetGreetRequest(request: InsertMeetGreetRequest): Promise<MeetGreetRequest>;
   updateMeetGreetRequest(id: string, data: Partial<MeetGreetRequest>): Promise<MeetGreetRequest | undefined>;
   
@@ -80,6 +83,10 @@ export class DbStorage implements IStorage {
   async getUserByEmail(email: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.email, email));
     return user;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return db.select().from(users).orderBy(desc(users.createdAt));
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
@@ -173,12 +180,47 @@ export class DbStorage implements IStorage {
     return transaction;
   }
 
+  async deleteAdminGrantTransaction(userId: string, type: string): Promise<boolean> {
+    const result = await db
+      .delete(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.type, type),
+          eq(transactions.paymentMethod, "admin_grant"),
+        )
+      );
+    return result.rowCount ? result.rowCount > 0 : false;
+  }
+
   async getMeetGreetRequestsByUser(userId: string): Promise<MeetGreetRequest[]> {
     return db.select().from(meetGreetRequests).where(eq(meetGreetRequests.userId, userId)).orderBy(desc(meetGreetRequests.createdAt));
   }
 
-  async getAllMeetGreetRequests(): Promise<MeetGreetRequest[]> {
-    return db.select().from(meetGreetRequests).orderBy(desc(meetGreetRequests.createdAt));
+  async getAllMeetGreetRequests(): Promise<(MeetGreetRequest & { user: { fullName: string; email: string } | null })[]> {
+    const rows = await db
+      .select()
+      .from(meetGreetRequests)
+      .leftJoin(users, eq(meetGreetRequests.userId, users.id))
+      .where(eq(meetGreetRequests.type, "meet_greet"))
+      .orderBy(desc(meetGreetRequests.createdAt));
+    return rows.map(r => ({
+      ...r.meet_greet_requests,
+      user: r.users ? { fullName: r.users.fullName, email: r.users.email } : null,
+    }));
+  }
+
+  async getAllLiveCallRequests(): Promise<(MeetGreetRequest & { user: { fullName: string; email: string } | null })[]> {
+    const rows = await db
+      .select()
+      .from(meetGreetRequests)
+      .leftJoin(users, eq(meetGreetRequests.userId, users.id))
+      .where(eq(meetGreetRequests.type, "live_call"))
+      .orderBy(desc(meetGreetRequests.createdAt));
+    return rows.map(r => ({
+      ...r.meet_greet_requests,
+      user: r.users ? { fullName: r.users.fullName, email: r.users.email } : null,
+    }));
   }
 
   async createMeetGreetRequest(insertRequest: InsertMeetGreetRequest): Promise<MeetGreetRequest> {

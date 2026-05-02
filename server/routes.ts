@@ -591,6 +591,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/admin/users", requireAdmin, async (req, res) => {
+    try {
+      const allUsers = await storage.getAllUsers();
+      const usersWithProgress = await Promise.all(
+        allUsers.map(async (u) => {
+          const progress = await storage.getUserProgress(u.id);
+          return { ...u, progress };
+        })
+      );
+      res.json(usersWithProgress);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/admin/meet-greet-requests", requireAdmin, async (req, res) => {
+    try {
+      const requests = await storage.getAllMeetGreetRequests();
+      res.json(requests);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/admin/live-call-requests", requireAdmin, async (req, res) => {
+    try {
+      const requests = await storage.getAllLiveCallRequests();
+      res.json(requests);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/admin/users/:id/progress", requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { flag, value } = req.body;
+
+      const validFlags: Record<string, string> = {
+        hasPromoCode: "promo_code",
+        hasDonation: "donation",
+        hasPurchase: "product",
+        hasLogisticsFee: "logistics_fee",
+      };
+
+      if (!validFlags[flag]) {
+        return res.status(400).json({ error: "Invalid flag" });
+      }
+
+      const transactionType = validFlags[flag];
+
+      if (value) {
+        const progress = await storage.getUserProgress(id);
+        const alreadySet =
+          (flag === "hasPromoCode" && progress.hasPromoCode) ||
+          (flag === "hasDonation" && progress.hasDonation) ||
+          (flag === "hasPurchase" && progress.hasPurchase) ||
+          (flag === "hasLogisticsFee" && progress.hasLogisticsFee);
+
+        if (!alreadySet) {
+          await storage.createTransaction({
+            userId: id,
+            type: transactionType,
+            itemName: `Admin Grant: ${flag}`,
+            amount: "0",
+            status: "completed",
+            paymentMethod: "admin_grant",
+          });
+        }
+      } else {
+        await storage.deleteAdminGrantTransaction(id, transactionType);
+      }
+
+      const updatedProgress = await storage.getUserProgress(id);
+      res.json(updatedProgress);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

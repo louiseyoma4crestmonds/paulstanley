@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -14,8 +14,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Users, Video, Calendar, Package, Heart, Loader2, Shield } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { Switch } from "@/components/ui/switch";
+import { Users, Video, Calendar, Package, Heart, Loader2, Shield, CheckCircle2, XCircle } from "lucide-react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+
+interface UserProgress {
+  hasPromoCode: boolean;
+  hasDonation: boolean;
+  hasPurchase: boolean;
+  hasLogisticsFee: boolean;
+  progress: number;
+}
 
 interface Request {
   id: number;
@@ -39,6 +50,53 @@ interface UserData {
   fullName: string;
   email: string;
   isAdmin: boolean;
+  progress?: UserProgress;
+}
+
+const FLAG_LABELS: Record<string, string> = {
+  hasPromoCode: "Promo/Fan Card",
+  hasDonation: "Donation",
+  hasPurchase: "Merchandise",
+  hasLogisticsFee: "Logistics Fee",
+};
+
+function ProgressToggle({
+  userId,
+  flag,
+  value,
+}: {
+  userId: number;
+  flag: string;
+  value: boolean;
+}) {
+  const { toast } = useToast();
+
+  const mutation = useMutation({
+    mutationFn: (newValue: boolean) =>
+      apiRequest("PATCH", `/api/admin/users/${userId}/progress`, {
+        flag,
+        value: newValue,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/users"] });
+    },
+    onError: (err: any) => {
+      toast({
+        title: "Error",
+        description: err.message || "Failed to update progress flag",
+        variant: "destructive",
+      });
+    },
+  });
+
+  return (
+    <Switch
+      checked={value}
+      onCheckedChange={(checked) => mutation.mutate(checked)}
+      disabled={mutation.isPending}
+      data-testid={`switch-${flag}-${userId}`}
+    />
+  );
 }
 
 export default function Admin() {
@@ -60,17 +118,15 @@ export default function Admin() {
     queryKey: ["/api/admin/users"],
   });
 
-  if (!user && !userLoading) {
-    setLocation("/login");
-    return null;
-  }
+  useEffect(() => {
+    if (!userLoading && !user) {
+      setLocation("/login");
+    } else if (!userLoading && user && !user.isAdmin) {
+      setLocation("/dashboard");
+    }
+  }, [user, userLoading, setLocation]);
 
-  if (user && !user.isAdmin) {
-    setLocation("/dashboard");
-    return null;
-  }
-
-  if (userLoading) {
+  if (userLoading || !user || !user.isAdmin) {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
@@ -196,8 +252,8 @@ export default function Admin() {
                               </div>
                             </TableCell>
                             <TableCell>
-                              {request.preferredDateTime 
-                                ? new Date(request.preferredDateTime).toLocaleString() 
+                              {request.preferredDateTime
+                                ? new Date(request.preferredDateTime).toLocaleString()
                                 : 'N/A'}
                             </TableCell>
                             <TableCell>{request.platform || 'N/A'}</TableCell>
@@ -224,8 +280,11 @@ export default function Admin() {
             <TabsContent value="users" className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Registered Users</CardTitle>
-                  <CardDescription>View all users registered on the platform</CardDescription>
+                  <CardTitle>Registered Users & Progress</CardTitle>
+                  <CardDescription>
+                    View all users and manually manage their 4 requirement progress flags.
+                    Toggle a switch to grant or revoke a requirement for a fan.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {usersLoading ? (
@@ -233,32 +292,110 @@ export default function Admin() {
                       <Loader2 className="h-6 w-6 animate-spin text-primary" />
                     </div>
                   ) : allUsers && allUsers.length > 0 ? (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>ID</TableHead>
-                          <TableHead>Full Name</TableHead>
-                          <TableHead>Email</TableHead>
-                          <TableHead>Admin</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {allUsers.map((u) => (
-                          <TableRow key={u.id} data-testid={`row-user-${u.id}`}>
-                            <TableCell>{u.id}</TableCell>
-                            <TableCell className="font-medium">{u.fullName}</TableCell>
-                            <TableCell>{u.email}</TableCell>
-                            <TableCell>
-                              {u.isAdmin ? (
-                                <Badge variant="default">Admin</Badge>
-                              ) : (
-                                <Badge variant="outline">User</Badge>
-                              )}
-                            </TableCell>
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>User</TableHead>
+                            <TableHead>Role</TableHead>
+                            <TableHead className="text-center">Progress</TableHead>
+                            <TableHead className="text-center">Promo/Fan Card</TableHead>
+                            <TableHead className="text-center">Donation</TableHead>
+                            <TableHead className="text-center">Merchandise</TableHead>
+                            <TableHead className="text-center">Logistics Fee</TableHead>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                        </TableHeader>
+                        <TableBody>
+                          {allUsers.map((u) => {
+                            const p = u.progress;
+                            const completedCount = p
+                              ? [p.hasPromoCode, p.hasDonation, p.hasPurchase, p.hasLogisticsFee].filter(Boolean).length
+                              : 0;
+                            return (
+                              <TableRow key={u.id} data-testid={`row-user-${u.id}`}>
+                                <TableCell>
+                                  <div>
+                                    <div className="font-medium">{u.fullName}</div>
+                                    <div className="text-sm text-muted-foreground">{u.email}</div>
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  {u.isAdmin ? (
+                                    <Badge variant="default">Admin</Badge>
+                                  ) : (
+                                    <Badge variant="outline">Fan</Badge>
+                                  )}
+                                </TableCell>
+                                <TableCell className="text-center">
+                                  <div className="flex flex-col items-center gap-1">
+                                    <span className="text-sm font-semibold">{completedCount}/4</span>
+                                    <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
+                                      <div
+                                        className="h-full bg-primary rounded-full transition-all"
+                                        style={{ width: `${(completedCount / 4) * 100}%` }}
+                                      />
+                                    </div>
+                                    {completedCount === 4 && (
+                                      <span className="text-xs text-green-600 font-medium">Unlocked</span>
+                                    )}
+                                  </div>
+                                </TableCell>
+                                {u.isAdmin ? (
+                                  <>
+                                    <TableCell className="text-center text-muted-foreground text-xs" colSpan={4}>
+                                      Admin accounts don't have progress
+                                    </TableCell>
+                                  </>
+                                ) : (
+                                  <>
+                                    <TableCell className="text-center">
+                                      <div className="flex items-center justify-center gap-2">
+                                        {p?.hasPromoCode ? (
+                                          <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                                        ) : (
+                                          <XCircle className="h-3.5 w-3.5 text-muted-foreground" />
+                                        )}
+                                        <ProgressToggle userId={u.id} flag="hasPromoCode" value={p?.hasPromoCode ?? false} />
+                                      </div>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                      <div className="flex items-center justify-center gap-2">
+                                        {p?.hasDonation ? (
+                                          <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                                        ) : (
+                                          <XCircle className="h-3.5 w-3.5 text-muted-foreground" />
+                                        )}
+                                        <ProgressToggle userId={u.id} flag="hasDonation" value={p?.hasDonation ?? false} />
+                                      </div>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                      <div className="flex items-center justify-center gap-2">
+                                        {p?.hasPurchase ? (
+                                          <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                                        ) : (
+                                          <XCircle className="h-3.5 w-3.5 text-muted-foreground" />
+                                        )}
+                                        <ProgressToggle userId={u.id} flag="hasPurchase" value={p?.hasPurchase ?? false} />
+                                      </div>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                      <div className="flex items-center justify-center gap-2">
+                                        {p?.hasLogisticsFee ? (
+                                          <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                                        ) : (
+                                          <XCircle className="h-3.5 w-3.5 text-muted-foreground" />
+                                        )}
+                                        <ProgressToggle userId={u.id} flag="hasLogisticsFee" value={p?.hasLogisticsFee ?? false} />
+                                      </div>
+                                    </TableCell>
+                                  </>
+                                )}
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </div>
                   ) : (
                     <div className="text-center py-8 text-muted-foreground">
                       No users registered yet
@@ -324,19 +461,19 @@ export default function Admin() {
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-primary">{allUsers?.length || 0}</div>
+                      <div className="text-3xl font-bold text-primary" data-testid="stat-total-users">{allUsers?.length || 0}</div>
                       <div className="text-sm text-muted-foreground">Total Users</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-primary">{meetGreetRequests?.length || 0}</div>
+                      <div className="text-3xl font-bold text-primary" data-testid="stat-meetgreet-requests">{meetGreetRequests?.length || 0}</div>
                       <div className="text-sm text-muted-foreground">Meet & Greet Requests</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-primary">{liveCallRequests?.length || 0}</div>
+                      <div className="text-3xl font-bold text-primary" data-testid="stat-livecall-requests">{liveCallRequests?.length || 0}</div>
                       <div className="text-sm text-muted-foreground">Live Call Requests</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-primary">
+                      <div className="text-3xl font-bold text-primary" data-testid="stat-total-requests">
                         {((meetGreetRequests?.length || 0) + (liveCallRequests?.length || 0))}
                       </div>
                       <div className="text-sm text-muted-foreground">Total Requests</div>
