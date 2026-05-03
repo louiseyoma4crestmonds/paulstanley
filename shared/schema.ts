@@ -99,6 +99,8 @@ export const insertCauseSchema = createInsertSchema(causes).omit({
 export const insertEventSchema = createInsertSchema(events).omit({
   id: true,
   createdAt: true,
+}).extend({
+  date: z.coerce.date(),
 });
 
 export const insertProductSchema = createInsertSchema(products).omit({
