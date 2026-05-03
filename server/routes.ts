@@ -230,7 +230,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/events", requireAdmin, async (req, res) => {
     try {
-      const data = insertEventSchema.parse(req.body);
+      const body = { ...req.body, date: req.body.date ? new Date(req.body.date) : undefined };
+      const data = insertEventSchema.parse(body);
       const event = await storage.createEvent(data);
       res.json(event);
     } catch (error: any) {
@@ -240,7 +241,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch("/api/events/:id", requireAdmin, async (req, res) => {
     try {
-      const event = await storage.updateEvent(req.params.id, req.body);
+      const body = { ...req.body, ...(req.body.date ? { date: new Date(req.body.date) } : {}) };
+      const event = await storage.updateEvent(req.params.id, body);
       if (!event) {
         return res.status(404).json({ error: "Event not found" });
       }
