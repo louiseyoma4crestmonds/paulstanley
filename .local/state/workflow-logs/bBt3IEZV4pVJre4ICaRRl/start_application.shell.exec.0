@@ -1,0 +1,66 @@
+
+> rest-express@1.0.0 dev
+> cross-env NODE_ENV=development tsx server/index.ts
+
+[1G[0K✅ Connected to PostgreSQL at [35m2026-05-02T22:44:46.053Z[39m
+10:44:46 PM [express] serving on port 5000
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+10:44:52 PM [express] POST /api/register 200 in 422ms :: {"message":"Registration successful. Please …
+Email send failed for emailtest_1777761892@gmail.com: Resend error: You can only send testing emails to your own email address (3kleads@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+[FALLBACK] Verification code for emailtest_1777761892@gmail.com: 486582
+10:45:57 PM [express] POST /api/register 200 in 145ms :: {"message":"Registration successful. Please …
+Email send failed for eyomao@gmail.com: Resend error: You can only send testing emails to your own email address (3kleads@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+[FALLBACK] Verification code for eyomao@gmail.com: 245114
+10:48:49 PM [express] POST /api/verify-email 400 in 13ms :: {"error":"Invalid verification code"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m10:51:35 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/App.tsx?v=WqaLoLtio7Lsg46X8b89n, /src/index.css?v=WqaLoLtio7Lsg46X8b89n[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m10:51:36 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Dashboard.tsx, /src/index.css?v=WqaLoLtio7Lsg46X8b89n[22m

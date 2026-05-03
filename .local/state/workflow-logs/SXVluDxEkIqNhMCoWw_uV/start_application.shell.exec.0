@@ -1,0 +1,23 @@
+
+> rest-express@1.0.0 dev
+> cross-env NODE_ENV=development tsx server/index.ts
+
+[1G[0K✅ Connected to PostgreSQL at [35m2026-05-02T22:30:13.972Z[39m
+Re-optimizing dependencies because lockfile has changed
+10:30:14 PM [express] serving on port 5000
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+Resend error: {
+  statusCode: [33m400[39m,
+  name: [32m'validation_error'[39m,
+  message: [32m'API key is invalid'[39m
+}
+Failed to send verification email: Error: API key is invalid
+    at sendVerificationEmail [90m(/home/runner/workspace/[39mserver/email.ts:73:13[90m)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+    at async <anonymous> [90m(/home/runner/workspace/[39mserver/routes.ts:55:7[90m)[39m
+10:31:17 PM [express] POST /api/register 400 in 1514ms :: {"error":"API key is invalid"}
+10:31:40 PM [express] POST /api/register 400 in 14ms :: {"error":"Email already registered"}

@@ -1,0 +1,848 @@
+[1G[0K⠙[1G[0K
+> rest-express@1.0.0 dev
+> cross-env NODE_ENV=development tsx server/index.ts
+
+[1G[0K⠙[1G[0K11:25:10 PM [express] serving on port 5000
+✅ Connected to PostgreSQL at [35m2026-05-02T23:25:10.668Z[39m
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:28:04 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+[2m11:28:06 PM[22m [36m[1m[vite][22m[39m [32m✨ new dependencies optimized: [33m@radix-ui/react-switch[32m[39m
+[2m11:28:06 PM[22m [36m[1m[vite][22m[39m [32m✨ optimized dependencies changed. reloading[39m
+11:28:15 PM [express] GET /api/admin/meet-greet-requests 200 in 5ms
+11:28:15 PM [express] GET /api/admin/live-call-requests 200 in 8ms
+11:28:15 PM [express] GET /api/admin/users 200 in 9ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:28:24 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:28:29 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m [33m(x2)[39m
+11:28:40 PM [express] GET /api/admin/live-call-requests 200 in 12ms
+11:28:40 PM [express] GET /api/admin/meet-greet-requests 200 in 14ms
+11:28:40 PM [express] GET /api/admin/users 200 in 13ms
+11:32:56 PM [express] GET /api/user/transactions 200 in 6ms
+11:32:56 PM [express] GET /api/user/progress 304 in 4ms :: {"hasPromoCode":false,"hasDonation":false,…
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:35:43 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/Header.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+11:37:16 PM [express] GET /api/admin/meet-greet-requests 200 in 22ms
+11:37:16 PM [express] GET /api/admin/users 200 in 18ms
+11:37:16 PM [express] GET /api/admin/live-call-requests 200 in 18ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:43:33 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+[2m11:43:36 PM[22m [36m[1m[vite][22m[39m [32m✨ new dependencies optimized: [33m@radix-ui/react-dialog[32m[39m
+[2m11:43:36 PM[22m [36m[1m[vite][22m[39m [32m✨ optimized dependencies changed. reloading[39m
+11:43:41 PM [express] GET /api/admin/meet-greet-requests 200 in 4ms
+11:43:41 PM [express] GET /api/admin/live-call-requests 200 in 20ms
+11:43:41 PM [express] GET /api/admin/users 200 in 20ms
+11:43:41 PM [express] GET /api/causes 200 in 72ms :: []
+11:43:41 PM [express] GET /api/products 200 in 69ms :: []
+11:43:41 PM [express] GET /api/events 200 in 72ms :: []
+11:43:56 PM [express] GET /api/events 304 in 4ms :: []
+11:43:56 PM [express] GET /api/admin/users 200 in 20ms
+11:43:56 PM [express] GET /api/admin/meet-greet-requests 200 in 19ms
+11:43:56 PM [express] GET /api/admin/live-call-requests 200 in 17ms
+11:43:56 PM [express] GET /api/causes 304 in 2ms :: []
+11:43:56 PM [express] GET /api/products 304 in 1ms :: []
+11:45:02 PM [express] GET /api/products 304 in 1ms :: []
+11:48:46 PM [express] GET /api/admin/meet-greet-requests 200 in 4ms
+11:48:46 PM [express] GET /api/causes 304 in 2ms :: []
+11:48:46 PM [express] GET /api/admin/live-call-requests 200 in 7ms
+11:48:46 PM [express] GET /api/events 304 in 2ms :: []
+11:48:46 PM [express] GET /api/admin/users 200 in 4ms
+11:48:46 PM [express] GET /api/products 304 in 2ms :: []
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:49:48 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/Header.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:49:54 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:50:03 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:50:10 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m [33m(x3)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:50:18 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m [33m(x4)[39m
+11:54:58 PM [express] GET /api/admin/live-call-requests 200 in 8ms
+11:54:58 PM [express] GET /api/admin/users 200 in 11ms
+11:54:58 PM [express] GET /api/admin/meet-greet-requests 200 in 4ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:57:24 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Home.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m11:57:30 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/App.tsx?v=8eIqCn6wnnpM9pcauxCQe, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe, /src/pages/Login.tsx, /src/pages/Register.tsx, /src/pages/Dashboard.tsx, /src/pages/VerifyEmail.tsx, /src/pages/Admin.tsx, /src/components/Header.tsx[22m
+11:57:33 PM [express] GET /api/admin/users 200 in 3ms
+11:57:33 PM [express] GET /api/admin/live-call-requests 200 in 6ms
+11:57:33 PM [express] GET /api/admin/meet-greet-requests 200 in 7ms
+11:57:41 PM [express] GET /api/causes 200 in 4ms :: []
+11:57:41 PM [express] GET /api/events 200 in 1ms :: []
+11:57:41 PM [express] GET /api/products 200 in 3ms :: []
+12:02:46 AM [express] POST /api/products 200 in 277ms :: {"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7"…
+12:03:04 AM [express] GET /api/causes 304 in 2ms :: []
+12:03:04 AM [express] GET /api/products 200 in 4ms :: [{"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7","…
+12:03:04 AM [express] GET /api/admin/users 200 in 5ms
+12:03:04 AM [express] GET /api/admin/meet-greet-requests 200 in 5ms
+12:03:04 AM [express] GET /api/admin/live-call-requests 200 in 3ms
+12:03:04 AM [express] GET /api/events 304 in 2ms :: []
+12:03:36 AM [express] POST /api/events 400 in 2ms :: {"error":"[\n  {\n    \"code\": \"invalid_type\"…
+12:03:45 AM [express] POST /api/events 400 in 0ms :: {"error":"[\n  {\n    \"code\": \"invalid_type\"…
+12:04:02 AM [express] POST /api/events 400 in 1ms :: {"error":"[\n  {\n    \"code\": \"invalid_type\"…
+12:04:21 AM [express] POST /api/events 400 in 1ms :: {"error":"[\n  {\n    \"code\": \"invalid_type\"…
+12:05:14 AM [express] POST /api/causes 200 in 5ms :: {"id":"155d9436-075e-4b63-bc33-d0fa13ba7d5e","ti…
+12:05:14 AM [express] GET /api/causes 200 in 2ms :: [{"id":"155d9436-075e-4b63-bc33-d0fa13ba7d5e","ti…
+12:06:03 AM [express] GET /api/products 304 in 5ms :: [{"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7","…
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:13:24 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/Header.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:13:31 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ProductCard.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:13:41 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/App.tsx?v=8eIqCn6wnnpM9pcauxCQe, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+[2m12:13:42 AM[22m [36m[1m[vite][22m[39m [32m✨ new dependencies optimized: [33m@radix-ui/react-separator[32m[39m
+[2m12:13:42 AM[22m [36m[1m[vite][22m[39m [32m✨ optimized dependencies changed. reloading[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:13:52 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+12:13:57 AM [express] GET /api/settings 200 in 12ms
+12:13:57 AM [express] GET /api/products 304 in 9ms :: [{"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7","…
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:14:37 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:14:41 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m [33m(x3)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:14:46 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m [33m(x4)[39m
+12:15:00 AM [express] GET /api/settings 200 in 5ms
+12:15:00 AM [express] GET /api/products 200 in 16ms :: [{"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7",…
+12:17:33 AM [express] POST /api/transactions 200 in 40ms :: {"id":"ce54c6bd-2f93-456c-bb82-8aa7a93c8e…
+12:17:49 AM [express] GET /api/admin/live-call-requests 200 in 6ms
+12:17:49 AM [express] GET /api/causes 304 in 1ms :: [{"id":"155d9436-075e-4b63-bc33-d0fa13ba7d5e","ti…
+12:17:49 AM [express] GET /api/admin/meet-greet-requests 200 in 8ms
+12:17:49 AM [express] GET /api/events 304 in 4ms :: []
+12:17:49 AM [express] GET /api/admin/users 200 in 6ms
+12:17:50 AM [express] GET /api/products 304 in 1ms :: [{"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7","…
+12:17:50 AM [express] GET /api/settings 200 in 4ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:18:51 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m [33m(x5)[39m
+12:18:56 AM [express] GET /api/admin/users 200 in 3ms
+12:18:56 AM [express] GET /api/admin/live-call-requests 200 in 4ms
+12:18:56 AM [express] GET /api/causes 304 in 4ms :: [{"id":"155d9436-075e-4b63-bc33-d0fa13ba7d5e","ti…
+12:18:56 AM [express] GET /api/events 304 in 3ms :: []
+12:18:56 AM [express] GET /api/admin/meet-greet-requests 200 in 10ms
+12:18:56 AM [express] GET /api/products 304 in 1ms :: [{"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7","…
+12:18:56 AM [express] GET /api/settings 200 in 3ms
+12:20:23 AM [express] GET /api/user/transactions 200 in 3ms
+12:20:23 AM [express] GET /api/user/progress 200 in 2ms :: {"hasPromoCode":false,"hasDonation":false,…
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:22:00 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/PaymentMethods.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+12:22:02 AM [express] GET /api/settings 200 in 5ms
+12:22:59 AM [express] GET /api/products 304 in 2ms :: [{"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7","…
+12:22:59 AM [express] GET /api/causes 304 in 2ms :: [{"id":"155d9436-075e-4b63-bc33-d0fa13ba7d5e","ti…
+12:22:59 AM [express] GET /api/events 304 in 1ms :: []
+12:38:26 AM [express] GET /api/events 304 in 1ms :: []
+12:38:26 AM [express] GET /api/products 304 in 1ms :: [{"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7","…
+12:38:26 AM [express] GET /api/causes 304 in 2ms :: [{"id":"155d9436-075e-4b63-bc33-d0fa13ba7d5e","ti…
+12:39:35 AM [express] GET /api/admin/meet-greet-requests 200 in 5ms
+12:39:35 AM [express] GET /api/admin/live-call-requests 200 in 5ms
+12:39:35 AM [express] GET /api/admin/users 200 in 3ms
+12:41:01 AM [express] GET /api/settings 200 in 7ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:42:08 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Contact.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:42:16 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m
+12:42:18 AM [express] GET /api/settings 200 in 8ms
+12:42:18 AM [express] GET /api/admin/meet-greet-requests 200 in 13ms
+12:42:18 AM [express] GET /api/admin/users 200 in 14ms
+12:42:18 AM [express] GET /api/admin/live-call-requests 200 in 11ms
+12:42:19 AM [express] GET /api/causes 304 in 1ms :: [{"id":"155d9436-075e-4b63-bc33-d0fa13ba7d5e","ti…
+12:42:19 AM [express] GET /api/events 304 in 1ms :: []
+12:42:19 AM [express] GET /api/products 304 in 2ms :: [{"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7","…
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:42:31 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m [33m(x2)[39m
+12:42:33 AM [express] GET /api/admin/live-call-requests 200 in 5ms
+12:42:33 AM [express] GET /api/admin/meet-greet-requests 200 in 4ms
+12:42:33 AM [express] GET /api/settings 200 in 11ms
+12:42:33 AM [express] GET /api/admin/users 200 in 14ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:42:40 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m [33m(x3)[39m
+12:42:42 AM [express] GET /api/admin/live-call-requests 200 in 7ms
+12:42:42 AM [express] GET /api/admin/meet-greet-requests 200 in 8ms
+12:42:42 AM [express] GET /api/admin/contact-messages 200 in 11ms
+12:42:42 AM [express] GET /api/admin/users 200 in 10ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:42:49 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m [33m(x4)[39m
+12:42:52 AM [express] GET /api/admin/users 200 in 5ms
+12:42:52 AM [express] GET /api/admin/contact-messages 200 in 5ms
+12:42:52 AM [express] GET /api/admin/live-call-requests 200 in 10ms
+12:42:52 AM [express] GET /api/admin/meet-greet-requests 200 in 6ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:43:05 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m [33m(x5)[39m
+12:43:08 AM [express] GET /api/admin/live-call-requests 200 in 5ms
+12:43:08 AM [express] GET /api/admin/meet-greet-requests 200 in 9ms
+12:43:08 AM [express] GET /api/admin/users 200 in 10ms
+12:43:08 AM [express] GET /api/admin/contact-messages 200 in 11ms
+12:50:04 AM [express] POST /api/contact 200 in 6ms
+12:50:14 AM [express] GET /api/admin/live-call-requests 200 in 4ms
+12:50:14 AM [express] GET /api/admin/meet-greet-requests 200 in 4ms
+12:50:14 AM [express] GET /api/admin/users 200 in 4ms
+12:50:14 AM [express] GET /api/products 304 in 4ms :: [{"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7","…
+12:50:14 AM [express] GET /api/events 304 in 3ms :: []
+12:50:14 AM [express] GET /api/causes 304 in 1ms :: [{"id":"155d9436-075e-4b63-bc33-d0fa13ba7d5e","ti…
+12:50:14 AM [express] GET /api/admin/contact-messages 200 in 4ms
+12:50:23 AM [express] GET /api/settings 200 in 4ms
+12:50:54 AM [express] GET /api/admin/live-call-requests 200 in 9ms
+12:50:54 AM [express] GET /api/admin/contact-messages 200 in 12ms
+12:50:54 AM [express] GET /api/admin/meet-greet-requests 200 in 12ms
+12:50:54 AM [express] GET /api/admin/users 200 in 22ms
+12:53:03 AM [express] POST /api/contact 200 in 5ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m12:54:00 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Admin.tsx, /src/index.css?v=8eIqCn6wnnpM9pcauxCQe[22m [33m(x6)[39m
+12:54:02 AM [express] GET /api/admin/meet-greet-requests 200 in 9ms
+12:54:02 AM [express] GET /api/admin/users 200 in 8ms
+12:54:02 AM [express] GET /api/causes 304 in 2ms :: [{"id":"155d9436-075e-4b63-bc33-d0fa13ba7d5e","ti…
+12:54:02 AM [express] GET /api/admin/live-call-requests 200 in 5ms
+12:54:03 AM [express] GET /api/events 304 in 1ms :: []
+12:54:03 AM [express] GET /api/products 304 in 2ms :: [{"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7","…
+12:54:03 AM [express] GET /api/admin/contact-messages 200 in 3ms
+12:54:50 AM [express] POST /api/contact 200 in 3ms
+12:54:53 AM [express] GET /api/admin/live-call-requests 200 in 7ms
+12:54:53 AM [express] GET /api/admin/users 200 in 10ms
+12:54:53 AM [express] GET /api/admin/meet-greet-requests 200 in 12ms
+12:54:53 AM [express] GET /api/admin/contact-messages 200 in 5ms
+12:55:06 AM [express] GET /api/settings 200 in 3ms
+12:55:30 AM [express] POST /api/contact 200 in 2ms
+12:55:40 AM [express] GET /api/admin/meet-greet-requests 200 in 6ms
+12:55:40 AM [express] GET /api/admin/live-call-requests 200 in 9ms
+12:55:40 AM [express] GET /api/admin/users 200 in 3ms
+12:55:40 AM [express] GET /api/admin/contact-messages 200 in 9ms
+12:55:47 AM [express] GET /api/settings 200 in 4ms
+12:56:16 AM [express] GET /api/causes 304 in 1ms :: [{"id":"155d9436-075e-4b63-bc33-d0fa13ba7d5e","ti…
+12:56:19 AM [express] GET /api/events 304 in 1ms :: []
+12:56:19 AM [express] GET /api/products 304 in 1ms :: [{"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7","…
+12:56:33 AM [express] GET /api/admin/meet-greet-requests 200 in 5ms
+12:56:33 AM [express] GET /api/admin/contact-messages 200 in 6ms
+12:56:33 AM [express] GET /api/admin/live-call-requests 200 in 10ms
+12:56:33 AM [express] GET /api/admin/users 200 in 9ms
+12:59:13 AM [express] GET /api/causes 304 in 3ms :: [{"id":"155d9436-075e-4b63-bc33-d0fa13ba7d5e","ti…
+12:59:13 AM [express] GET /api/events 304 in 5ms :: []
+12:59:13 AM [express] GET /api/products 304 in 5ms :: [{"id":"41ee6c0f-cba7-4269-b26f-102b15d5a5f7","…
+1:00:17 AM [express] GET /api/settings 200 in 4ms
+1:00:23 AM [express] GET /api/admin/meet-greet-requests 200 in 19ms
+1:00:23 AM [express] GET /api/admin/contact-messages 200 in 16ms
+1:00:23 AM [express] GET /api/admin/live-call-requests 200 in 15ms
+1:00:23 AM [express] GET /api/admin/users 200 in 8ms
+1:00:25 AM [express] GET /api/settings 200 in 3ms
+1:00:54 AM [express] POST /api/events 400 in 2ms :: {"error":"[\n  {\n    \"code\": \"invalid_type\"…
+1:02:00 AM [express] POST /api/events 400 in 1ms :: {"error":"[\n  {\n    \"code\": \"invalid_type\"…

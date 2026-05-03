@@ -1,0 +1,14 @@
+
+> rest-express@1.0.0 dev
+> cross-env NODE_ENV=development tsx server/index.ts
+
+[1G[0K✅ Connected to PostgreSQL at [35m2026-05-02T22:17:12.061Z[39m
+10:17:12 PM [express] serving on port 5000
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+10:17:40 PM [express] GET /api/causes 200 in 28ms :: []
+10:17:48 PM [express] GET /api/products 200 in 3ms :: []
+10:17:55 PM [express] GET /api/events 200 in 5ms :: []

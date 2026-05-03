@@ -1,0 +1,62 @@
+
+> rest-express@1.0.0 dev
+> cross-env NODE_ENV=development tsx server/index.ts
+
+[1G[0K✅ Connected to PostgreSQL at [35m2026-05-02T22:52:43.889Z[39m
+10:52:43 PM [express] serving on port 5000
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m10:52:58 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/VerifyEmail.tsx, /src/index.css?v=J5sYIL_oSekup3gi9Anxh[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m10:53:21 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/VerifyEmail.tsx, /src/index.css?v=J5sYIL_oSekup3gi9Anxh[22m [33m(x2)[39m
+10:53:38 PM [express] POST /api/register 200 in 179ms :: {"message":"Registration successful. Please …
+Email send failed for bannertest_1777762418@example.com: Resend error: You can only send testing emails to your own email address (3kleads@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+[FALLBACK] Verification code for bannertest_1777762418@example.com: 387617

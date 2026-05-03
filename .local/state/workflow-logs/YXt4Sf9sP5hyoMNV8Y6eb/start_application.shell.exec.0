@@ -1,0 +1,6 @@
+
+> rest-express@1.0.0 dev
+> cross-env NODE_ENV=development tsx server/index.ts
+
+[1G[0K✅ Connected to PostgreSQL at [35m2026-05-02T22:15:53.978Z[39m
+10:15:54 PM [express] serving on port 5000
