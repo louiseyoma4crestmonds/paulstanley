@@ -671,6 +671,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/contact", async (req, res) => {
+    try {
+      const { insertContactMessageSchema } = await import("@shared/schema");
+      const data = insertContactMessageSchema.parse(req.body);
+      const msg = await storage.createContactMessage(data);
+      res.json(msg);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/admin/contact-messages", requireAdmin, async (req, res) => {
+    try {
+      const msgs = await storage.getAllContactMessages();
+      res.json(msgs);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/admin/contact-messages/:id/read", requireAdmin, async (req, res) => {
+    try {
+      const msg = await storage.markContactMessageRead(req.params.id);
+      if (!msg) return res.status(404).json({ error: "Message not found" });
+      res.json(msg);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   app.get("/api/settings", async (req, res) => {
     try {
       const all = await storage.getSettings();

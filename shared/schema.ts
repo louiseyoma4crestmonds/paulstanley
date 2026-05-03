@@ -87,6 +87,16 @@ export const settings = pgTable("settings", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const contactMessages = pgTable("contact_messages", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  subject: text("subject").notNull(),
+  message: text("message").notNull(),
+  read: boolean("read").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -147,3 +157,11 @@ export type InsertMeetGreetRequest = z.infer<typeof insertMeetGreetRequestSchema
 export type PromoCode = typeof promoCodes.$inferSelect;
 export type InsertPromoCode = z.infer<typeof insertPromoCodeSchema>;
 export type Setting = typeof settings.$inferSelect;
+
+export const insertContactMessageSchema = createInsertSchema(contactMessages).omit({
+  id: true,
+  read: true,
+  createdAt: true,
+});
+export type InsertContactMessage = z.infer<typeof insertContactMessageSchema>;
+export type ContactMessage = typeof contactMessages.$inferSelect;

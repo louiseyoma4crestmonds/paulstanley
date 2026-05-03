@@ -42,6 +42,9 @@ import {
   TrendingUp,
   Settings,
   Save,
+  MessageSquare,
+  Mail,
+  Eye,
 } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -75,6 +78,16 @@ interface UserData {
   email: string;
   isAdmin: boolean;
   progress?: UserProgress;
+}
+
+interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  read: boolean;
+  createdAt: string;
 }
 
 interface Cause {
@@ -613,6 +626,7 @@ function SettingsManager() {
 export default function Admin() {
   const [, setLocation] = useLocation();
 
+  const { toast } = useToast();
   const { data: user, isLoading: userLoading } = useQuery<UserData>({ queryKey: ["/api/user"] });
   const { data: meetGreetRequests, isLoading: meetGreetLoading } = useQuery<Request[]>({ queryKey: ["/api/admin/meet-greet-requests"] });
   const { data: liveCallRequests, isLoading: liveCallLoading } = useQuery<Request[]>({ queryKey: ["/api/admin/live-call-requests"] });
@@ -620,6 +634,14 @@ export default function Admin() {
   const { data: causes } = useQuery<Cause[]>({ queryKey: ["/api/causes"] });
   const { data: events } = useQuery<Event[]>({ queryKey: ["/api/events"] });
   const { data: products } = useQuery<Product[]>({ queryKey: ["/api/products"] });
+  const { data: contactMessages, isLoading: messagesLoading } = useQuery<ContactMessage[]>({ queryKey: ["/api/admin/contact-messages"] });
+
+  const markReadMutation = useMutation({
+    mutationFn: (id: string) =>
+      apiRequest(`/api/admin/contact-messages/${id}/read`, { method: "PATCH" }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/admin/contact-messages"] }),
+    onError: () => toast({ title: "Error", description: "Failed to mark as read", variant: "destructive" }),
+  });
 
   useEffect(() => {
     if (!userLoading && !user) setLocation("/login");
@@ -655,7 +677,7 @@ export default function Admin() {
           </div>
 
           <Tabs defaultValue="requests" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="requests" data-testid="tab-requests">
                 <Video className="mr-2 h-4 w-4" /> Requests
               </TabsTrigger>
@@ -664,6 +686,14 @@ export default function Admin() {
               </TabsTrigger>
               <TabsTrigger value="content" data-testid="tab-content">
                 <Package className="mr-2 h-4 w-4" /> Content
+              </TabsTrigger>
+              <TabsTrigger value="messages" data-testid="tab-messages" className="relative">
+                <MessageSquare className="mr-2 h-4 w-4" /> Messages
+                {contactMessages && contactMessages.filter((m) => !m.read).length > 0 && (
+                  <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[10px] flex items-center justify-center font-bold">
+                    {contactMessages.filter((m) => !m.read).length}
+                  </span>
+                )}
               </TabsTrigger>
               <TabsTrigger value="settings" data-testid="tab-settings">
                 <Settings className="mr-2 h-4 w-4" /> Settings
@@ -889,6 +919,77 @@ export default function Admin() {
               <CausesManager />
               <EventsManager />
               <ProductsManager />
+            </TabsContent>
+
+            {/* ── MESSAGES TAB ── */}
+            <TabsContent value="messages" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Mail className="h-5 w-5" /> Contact Messages
+                  </CardTitle>
+                  <CardDescription>All messages submitted via the Contact Us page</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {messagesLoading ? (
+                    <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
+                  ) : contactMessages && contactMessages.length > 0 ? (
+                    <div className="space-y-4">
+                      {contactMessages.map((msg) => (
+                        <div
+                          key={msg.id}
+                          data-testid={`card-message-${msg.id}`}
+                          className={`border rounded-lg p-4 space-y-3 transition-colors ${msg.read ? "bg-background" : "bg-primary/5 border-primary/20"}`}
+                        >
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="space-y-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="font-semibold">{msg.name}</span>
+                                {!msg.read && (
+                                  <Badge variant="default" className="text-[10px] px-1.5 py-0">New</Badge>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                <Mail className="h-3 w-3" />
+                                <span>{msg.email}</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                {new Date(msg.createdAt).toLocaleDateString()} {new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                              </span>
+                              {!msg.read && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => markReadMutation.mutate(msg.id)}
+                                  disabled={markReadMutation.isPending}
+                                  data-testid={`button-mark-read-${msg.id}`}
+                                >
+                                  <Eye className="mr-1 h-3 w-3" /> Mark Read
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Subject</p>
+                            <p className="text-sm font-medium">{msg.subject}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Message</p>
+                            <p className="text-sm whitespace-pre-wrap">{msg.message}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <MessageSquare className="h-10 w-10 mx-auto mb-3 opacity-30" />
+                      <p>No messages yet.</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </TabsContent>
 
             {/* ── SETTINGS TAB ── */}

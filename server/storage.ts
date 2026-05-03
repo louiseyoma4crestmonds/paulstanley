@@ -14,6 +14,8 @@ import {
   type PromoCode,
   type InsertPromoCode,
   type Setting,
+  type ContactMessage,
+  type InsertContactMessage,
 } from "@shared/schema";
 import { db } from "./db";
 import { 
@@ -25,6 +27,7 @@ import {
   meetGreetRequests,
   promoCodes,
   settings,
+  contactMessages,
 } from "@shared/schema";
 import { eq, desc, and } from "drizzle-orm";
 
@@ -70,6 +73,10 @@ export interface IStorage {
   getSetting(key: string): Promise<string | null>;
   setSetting(key: string, value: string): Promise<Setting>;
   getSettings(): Promise<Record<string, string>>;
+
+  createContactMessage(msg: InsertContactMessage): Promise<ContactMessage>;
+  getAllContactMessages(): Promise<ContactMessage[]>;
+  markContactMessageRead(id: string): Promise<ContactMessage | undefined>;
   
   getUserProgress(userId: string): Promise<{
     hasPromoCode: boolean;
@@ -275,6 +282,20 @@ export class DbStorage implements IStorage {
   async getSettings(): Promise<Record<string, string>> {
     const rows = await db.select().from(settings);
     return Object.fromEntries(rows.map(r => [r.key, r.value]));
+  }
+
+  async createContactMessage(msg: InsertContactMessage): Promise<ContactMessage> {
+    const [row] = await db.insert(contactMessages).values(msg).returning();
+    return row;
+  }
+
+  async getAllContactMessages(): Promise<ContactMessage[]> {
+    return db.select().from(contactMessages).orderBy(desc(contactMessages.createdAt));
+  }
+
+  async markContactMessageRead(id: string): Promise<ContactMessage | undefined> {
+    const [row] = await db.update(contactMessages).set({ read: true }).where(eq(contactMessages.id, id)).returning();
+    return row;
   }
 
   async getUserProgress(userId: string): Promise<{

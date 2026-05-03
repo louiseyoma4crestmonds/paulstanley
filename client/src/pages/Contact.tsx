@@ -6,10 +6,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, MessageSquare, Send, Loader2 } from "lucide-react";
+import { Mail, MessageSquare, Send, Loader2, CheckCircle } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Contact() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const [sent, setSent] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,15 +21,25 @@ export default function Contact() {
     message: "",
   });
 
+  const mutation = useMutation({
+    mutationFn: () =>
+      apiRequest("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      }),
+    onSuccess: () => {
+      setSent(true);
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    },
+    onError: () => {
+      toast({ title: "Failed to send", description: "Please try again.", variant: "destructive" });
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    console.log("Contact form submitted", formData);
-    setTimeout(() => {
-      setIsLoading(false);
-      setFormData({ name: "", email: "", subject: "", message: "" });
-      alert("Message sent successfully!");
-    }, 1500);
+    mutation.mutate();
   };
 
   return (
@@ -84,62 +98,80 @@ export default function Contact() {
               <CardDescription>Fill out the form below and we'll get back to you shortly</CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {sent ? (
+                <div className="flex flex-col items-center justify-center py-12 gap-4 text-center">
+                  <CheckCircle className="h-14 w-14 text-green-500" />
+                  <h3 className="text-xl font-semibold">Message Sent!</h3>
+                  <p className="text-muted-foreground max-w-sm">
+                    Thank you for reaching out. We'll get back to you within 24-48 hours.
+                  </p>
+                  <Button variant="outline" onClick={() => setSent(false)} data-testid="button-send-another">
+                    Send Another Message
+                  </Button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Name</Label>
+                      <Input
+                        id="name"
+                        type="text"
+                        placeholder="Your name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        required
+                        data-testid="input-contact-name"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="your@email.com"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        required
+                        data-testid="input-contact-email"
+                      />
+                    </div>
+                  </div>
                   <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
+                    <Label htmlFor="subject">Subject</Label>
                     <Input
-                      id="name"
+                      id="subject"
                       type="text"
-                      placeholder="Your name"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="How can we help?"
+                      value={formData.subject}
+                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                       required
-                      data-testid="input-contact-name"
+                      data-testid="input-contact-subject"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="your@email.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    <Label htmlFor="message">Message</Label>
+                    <Textarea
+                      id="message"
+                      placeholder="Tell us more about your inquiry..."
+                      rows={6}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       required
-                      data-testid="input-contact-email"
+                      data-testid="textarea-contact-message"
                     />
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="subject">Subject</Label>
-                  <Input
-                    id="subject"
-                    type="text"
-                    placeholder="How can we help?"
-                    value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    required
-                    data-testid="input-contact-subject"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea
-                    id="message"
-                    placeholder="Tell us more about your inquiry..."
-                    rows={6}
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    required
-                    data-testid="textarea-contact-message"
-                  />
-                </div>
-                <Button type="submit" className="w-full md:w-auto" disabled={isLoading} data-testid="button-contact-submit">
-                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Send Message
-                </Button>
-              </form>
+                  <Button
+                    type="submit"
+                    className="w-full md:w-auto"
+                    disabled={mutation.isPending}
+                    data-testid="button-contact-submit"
+                  >
+                    {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Send Message
+                  </Button>
+                </form>
+              )}
             </CardContent>
           </Card>
         </div>
