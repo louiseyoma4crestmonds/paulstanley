@@ -13,6 +13,7 @@ import {
   type InsertMeetGreetRequest,
   type PromoCode,
   type InsertPromoCode,
+  type Setting,
 } from "@shared/schema";
 import { db } from "./db";
 import { 
@@ -23,6 +24,7 @@ import {
   transactions, 
   meetGreetRequests,
   promoCodes,
+  settings,
 } from "@shared/schema";
 import { eq, desc, and } from "drizzle-orm";
 
@@ -64,6 +66,10 @@ export interface IStorage {
   getPromoCode(code: string): Promise<PromoCode | undefined>;
   createPromoCode(promoCode: InsertPromoCode): Promise<PromoCode>;
   usePromoCode(code: string, userId: string): Promise<PromoCode | undefined>;
+
+  getSetting(key: string): Promise<string | null>;
+  setSetting(key: string, value: string): Promise<Setting>;
+  getSettings(): Promise<Record<string, string>>;
   
   getUserProgress(userId: string): Promise<{
     hasPromoCode: boolean;
@@ -250,6 +256,25 @@ export class DbStorage implements IStorage {
       .where(and(eq(promoCodes.code, code), eq(promoCodes.used, false)))
       .returning();
     return promoCode;
+  }
+
+  async getSetting(key: string): Promise<string | null> {
+    const [row] = await db.select().from(settings).where(eq(settings.key, key));
+    return row ? row.value : null;
+  }
+
+  async setSetting(key: string, value: string): Promise<Setting> {
+    const [row] = await db
+      .insert(settings)
+      .values({ key, value })
+      .onConflictDoUpdate({ target: settings.key, set: { value, updatedAt: new Date() } })
+      .returning();
+    return row;
+  }
+
+  async getSettings(): Promise<Record<string, string>> {
+    const rows = await db.select().from(settings);
+    return Object.fromEntries(rows.map(r => [r.key, r.value]));
   }
 
   async getUserProgress(userId: string): Promise<{

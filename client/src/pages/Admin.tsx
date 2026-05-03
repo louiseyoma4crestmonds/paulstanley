@@ -40,6 +40,8 @@ import {
   Pencil,
   Trash2,
   TrendingUp,
+  Settings,
+  Save,
 } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -533,6 +535,81 @@ function ProductsManager() {
   );
 }
 
+function SettingsManager() {
+  const { toast } = useToast();
+  const [form, setForm] = useState({ paypal_email: "", usdt_wallet: "" });
+  const [loaded, setLoaded] = useState(false);
+
+  const { data: settings } = useQuery<Record<string, string>>({ queryKey: ["/api/settings"] });
+
+  useEffect(() => {
+    if (settings && !loaded) {
+      setForm({
+        paypal_email: settings.paypal_email ?? "",
+        usdt_wallet: settings.usdt_wallet ?? "",
+      });
+      setLoaded(true);
+    }
+  }, [settings, loaded]);
+
+  const saveMutation = useMutation({
+    mutationFn: () =>
+      apiRequest("/api/admin/settings", { method: "PUT", body: JSON.stringify(form) }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/settings"] });
+      toast({ title: "Settings saved", description: "Payment addresses updated successfully." });
+    },
+    onError: (err: any) => toast({ title: "Error", description: err.message, variant: "destructive" }),
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Settings className="h-5 w-5" /> Payment Settings
+        </CardTitle>
+        <CardDescription>
+          Set the payment addresses fans will send money to. These appear in the checkout flow.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="paypal-email">PayPal Email or PayPal.me Username</Label>
+          <Input
+            id="paypal-email"
+            placeholder="e.g. paul@example.com or paulstanley"
+            value={form.paypal_email}
+            onChange={(e) => setForm({ ...form, paypal_email: e.target.value })}
+            data-testid="input-settings-paypal"
+          />
+          <p className="text-xs text-muted-foreground">
+            Fans will be directed to pay this PayPal address for product purchases.
+          </p>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="usdt-wallet">USDT Wallet Address (TRC20)</Label>
+          <Input
+            id="usdt-wallet"
+            placeholder="e.g. TQn9Y2khDD5kFoGSw..."
+            value={form.usdt_wallet}
+            onChange={(e) => setForm({ ...form, usdt_wallet: e.target.value })}
+            data-testid="input-settings-usdt"
+          />
+          <p className="text-xs text-muted-foreground">
+            Fans will send USDT to this TRC20 address when paying with crypto.
+          </p>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending} data-testid="button-save-settings">
+          {saveMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+          Save Settings
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
+
 export default function Admin() {
   const [, setLocation] = useLocation();
 
@@ -578,7 +655,7 @@ export default function Admin() {
           </div>
 
           <Tabs defaultValue="requests" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="requests" data-testid="tab-requests">
                 <Video className="mr-2 h-4 w-4" /> Requests
               </TabsTrigger>
@@ -587,6 +664,9 @@ export default function Admin() {
               </TabsTrigger>
               <TabsTrigger value="content" data-testid="tab-content">
                 <Package className="mr-2 h-4 w-4" /> Content
+              </TabsTrigger>
+              <TabsTrigger value="settings" data-testid="tab-settings">
+                <Settings className="mr-2 h-4 w-4" /> Settings
               </TabsTrigger>
             </TabsList>
 
@@ -809,6 +889,11 @@ export default function Admin() {
               <CausesManager />
               <EventsManager />
               <ProductsManager />
+            </TabsContent>
+
+            {/* ── SETTINGS TAB ── */}
+            <TabsContent value="settings" className="space-y-6">
+              <SettingsManager />
             </TabsContent>
           </Tabs>
         </div>

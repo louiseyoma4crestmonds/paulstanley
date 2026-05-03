@@ -81,6 +81,12 @@ export const promoCodes = pgTable("promo_codes", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const settings = pgTable("settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -140,3 +146,4 @@ export type MeetGreetRequest = typeof meetGreetRequests.$inferSelect;
 export type InsertMeetGreetRequest = z.infer<typeof insertMeetGreetRequestSchema>;
 export type PromoCode = typeof promoCodes.$inferSelect;
 export type InsertPromoCode = z.infer<typeof insertPromoCodeSchema>;
+export type Setting = typeof settings.$inferSelect;

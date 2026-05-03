@@ -671,6 +671,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/settings", async (req, res) => {
+    try {
+      const all = await storage.getSettings();
+      res.json(all);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.put("/api/admin/settings", requireAdmin, async (req, res) => {
+    try {
+      const { paypal_email, usdt_wallet } = req.body;
+      const results: Record<string, string> = {};
+      if (paypal_email !== undefined) {
+        await storage.setSetting("paypal_email", paypal_email);
+        results.paypal_email = paypal_email;
+      }
+      if (usdt_wallet !== undefined) {
+        await storage.setSetting("usdt_wallet", usdt_wallet);
+        results.usdt_wallet = usdt_wallet;
+      }
+      res.json(results);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

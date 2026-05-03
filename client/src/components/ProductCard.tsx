@@ -2,6 +2,8 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
   id: string;
@@ -14,6 +16,13 @@ interface ProductCardProps {
 
 export default function ProductCard({ id, name, price, image, description, stock = 10 }: ProductCardProps) {
   const inStock = stock > 0;
+  const { addItem } = useCart();
+  const { toast } = useToast();
+
+  const handleAddToCart = () => {
+    addItem({ productId: id, name, price, image });
+    toast({ title: "Added to cart", description: `${name} has been added to your cart.` });
+  };
 
   return (
     <Card className="overflow-hidden hover-elevate transition-all" data-testid={`card-product-${id}`}>
@@ -32,7 +41,7 @@ export default function ProductCard({ id, name, price, image, description, stock
       <CardHeader>
         <div className="flex justify-between items-start gap-2">
           <h3 className="text-lg font-semibold">{name}</h3>
-          <span className="text-lg font-bold text-primary">${price}</span>
+          <span className="text-lg font-bold text-primary">${price.toFixed(2)}</span>
         </div>
       </CardHeader>
       {description && (
@@ -44,10 +53,11 @@ export default function ProductCard({ id, name, price, image, description, stock
         <Button
           className="w-full"
           disabled={!inStock}
+          onClick={handleAddToCart}
           data-testid={`button-add-cart-${id}`}
         >
           <ShoppingCart className="mr-2 h-4 w-4" />
-          Add to Cart
+          {inStock ? "Add to Cart" : "Out of Stock"}
         </Button>
       </CardFooter>
     </Card>

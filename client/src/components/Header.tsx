@@ -1,13 +1,15 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import ThemeToggle from "./ThemeToggle";
 import { ShoppingCart, Menu, X, LogOut, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useCart } from "@/contexts/CartContext";
 
 interface UserData {
-  id: number;
+  id: string;
   fullName: string;
   email: string;
   isAdmin: boolean;
@@ -16,6 +18,7 @@ interface UserData {
 export default function Header() {
   const [location, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { count, setIsOpen: openCart } = useCart();
 
   const { data: user } = useQuery<UserData>({
     queryKey: ["/api/user"],
@@ -63,8 +66,19 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" data-testid="button-cart">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative"
+              onClick={() => openCart(true)}
+              data-testid="button-cart"
+            >
               <ShoppingCart className="h-5 w-5" />
+              {count > 0 && (
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs rounded-full">
+                  {count}
+                </Badge>
+              )}
             </Button>
             <ThemeToggle />
             <div className="hidden md:flex gap-2">
