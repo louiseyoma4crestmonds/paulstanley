@@ -634,7 +634,11 @@ export default function Admin() {
   const { data: causes } = useQuery<Cause[]>({ queryKey: ["/api/causes"] });
   const { data: events } = useQuery<Event[]>({ queryKey: ["/api/events"] });
   const { data: products } = useQuery<Product[]>({ queryKey: ["/api/products"] });
-  const { data: contactMessages, isLoading: messagesLoading } = useQuery<ContactMessage[]>({ queryKey: ["/api/admin/contact-messages"] });
+  const { data: contactMessages, isLoading: messagesLoading, refetch: refetchMessages } = useQuery<ContactMessage[]>({
+    queryKey: ["/api/admin/contact-messages"],
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+  });
 
   const markReadMutation = useMutation({
     mutationFn: (id: string) =>

@@ -9,6 +9,7 @@ import {
   insertTransactionSchema,
   insertMeetGreetRequestSchema,
   insertPromoCodeSchema,
+  insertContactMessageSchema,
 } from "@shared/schema";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -673,7 +674,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/contact", async (req, res) => {
     try {
-      const { insertContactMessageSchema } = await import("@shared/schema");
       const data = insertContactMessageSchema.parse(req.body);
       const msg = await storage.createContactMessage(data);
       res.json(msg);
